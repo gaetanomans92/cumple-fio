@@ -115,6 +115,14 @@ font-size:12px;
 color:#888;
 }
 
+/* estado enviado */
+.success {
+text-align:center;
+color:#3a5a40;
+font-weight:500;
+margin-top:20px;
+}
+
 </style>
 </head>
 
@@ -127,10 +135,7 @@ color:#888;
 
 <form id="etamaForm">
 
-<!-- OPCIONES -->
-
 <div class="card" onclick="selectOption(this,'Bowl de Pollo')">
-<input type="radio" name="plato">
 <div>
 <div class="title">Bowl de Pollo</div>
 <div class="desc">Arroz jazmín, aguacate, pollo, tirabeques, tomate cherry y cebolla encurtida.</div>
@@ -139,7 +144,6 @@ color:#888;
 </div>
 
 <div class="card" onclick="selectOption(this,'Bowl del Mar del Norte')">
-<input type="radio" name="plato">
 <div>
 <div class="title">Bowl del Mar del Norte</div>
 <div class="desc">Arroz jazmín, salmón ahumado, papaya, mango, aguacate y verduras frescas.</div>
@@ -148,7 +152,6 @@ color:#888;
 </div>
 
 <div class="card" onclick="selectOption(this,'Curry Thai')">
-<input type="radio" name="plato">
 <div>
 <div class="title">Curry Thai 🌶️</div>
 <div class="desc">Arroz jazmín, pollo cocinado con curry verde ligeramente picante, verduras frescas y anacardos.</div>
@@ -157,7 +160,6 @@ color:#888;
 </div>
 
 <div class="card" onclick="selectOption(this,'Huevos Trufados')">
-<input type="radio" name="plato">
 <div>
 <div class="title">Huevos Trufados</div>
 <div class="desc">Espejo de salsa holandesa, huevos benedict, tiras de pan tostado, aceite y paté de trufa.</div>
@@ -165,11 +167,11 @@ color:#888;
 <div class="price">12,00€</div>
 </div>
 
-<!-- INPUT -->
-
 <input type="text" id="nombre" placeholder="Nombre / Alergias">
 
 <button type="submit">Reservar mi plato</button>
+
+<div id="mensaje"></div>
 
 </form>
 
@@ -183,6 +185,14 @@ Reservas abiertas hasta jueves 21:00
 
 let selectedPlato = null;
 
+// bloquear si ya reservó
+if (localStorage.getItem("etama_reserva")) {
+document.addEventListener("DOMContentLoaded", () => {
+document.getElementById("etamaForm").innerHTML =
+"<h3 class='success'>Ya tienes una reserva registrada ✔</h3>";
+});
+}
+
 function selectOption(el, value) {
 document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
 el.classList.add('selected');
@@ -191,6 +201,11 @@ selectedPlato = value;
 
 document.getElementById("etamaForm").addEventListener("submit", async function(e){
 e.preventDefault();
+
+if (localStorage.getItem("etama_reserva")) {
+alert("Ya has realizado una reserva.");
+return;
+}
 
 const nombre = document.getElementById("nombre").value;
 
@@ -211,14 +226,22 @@ fecha: new Date().toISOString()
 };
 
 try {
+
 await fetch("https://script.google.com/macros/s/AKfycbz7liBNAYKY3G-rfCb5v6HRwlyh9MJAK45lyP376wXBQ0iuXVE02ytB-LL54f9v__PH/exec", {
 method: "POST",
 body: JSON.stringify(data)
 });
 
-alert("Reserva enviada ✔");
-document.getElementById("etamaForm").reset();
+// bloquear usuario
+localStorage.setItem("etama_reserva", "true");
+
+// UI feedback
+document.getElementById("mensaje").innerHTML =
+"<div class='success'>Reserva enviada ✔</div>";
+
+// reset visual
 document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+document.getElementById("etamaForm").reset();
 selectedPlato = null;
 
 } catch (err) {
