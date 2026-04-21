@@ -118,6 +118,18 @@ font-weight:500;
 margin-top:20px;
 }
 
+.whatsapp {
+text-align:center;
+margin-top:18px;
+font-size:13px;
+}
+
+.whatsapp a {
+color:#3a5a40;
+text-decoration:none;
+font-weight:500;
+}
+
 </style>
 </head>
 
@@ -130,7 +142,7 @@ margin-top:20px;
 
 <form id="etamaForm">
 
-<!-- PLATOS BASE -->
+<!-- PLATOS -->
 
 <div class="card" onclick="selectOption(this,'Bowl de Pollo')">
 <div>
@@ -164,12 +176,10 @@ margin-top:20px;
 <div class="price">12,00€</div>
 </div>
 
-<!-- NUEVOS PLATOS -->
-
 <div class="card" onclick="selectOption(this,'Tacos de Cochinita Pibil')">
 <div>
 <div class="title">Tacos de Cochinita Pibil (3UD)</div>
-<div class="desc">Carne cocinada 18h a baja temperatura, tortilla de maíz, cebolla encurtida, cebolla crujiente y cilantro.</div>
+<div class="desc">Carne cocinada 18h, tortilla de maíz, cebolla encurtida, cebolla crujiente y cilantro.</div>
 </div>
 <div class="price">12,00€</div>
 </div>
@@ -185,7 +195,7 @@ margin-top:20px;
 <div class="card" onclick="selectOption(this,'Tagliata Burger')">
 <div>
 <div class="title">Tagliata Burger</div>
-<div class="desc">Carne ECO jugosa, rúcula fresca, lascas de parmigiano reggiano y vinagre balsámico de Módena DOP.</div>
+<div class="desc">Carne ECO, rúcula fresca, parmigiano reggiano y vinagre balsámico de Módena DOP.</div>
 </div>
 <div class="price">13,50€</div>
 </div>
@@ -193,7 +203,7 @@ margin-top:20px;
 <div class="card" onclick="selectOption(this,'Clasica de Aguacate')">
 <div>
 <div class="title">Clásica de Aguacate</div>
-<div class="desc">Pan de masa madre con aguacate fresco y perfume de lima.</div>
+<div class="desc">Pan de masa madre con aguacate fresco y lima.</div>
 </div>
 <div class="price">7,90€</div>
 </div>
@@ -201,7 +211,7 @@ margin-top:20px;
 <div class="card" onclick="selectOption(this,'Hummus Granada')">
 <div>
 <div class="title">Hummus Granada</div>
-<div class="desc">Crema de garbanzo, coulis de granada, crudités, dukkah crujiente y pan carasau.</div>
+<div class="desc">Crema de garbanzo, granada, crudités, dukkah y pan carasau.</div>
 </div>
 <div class="price">8,00€</div>
 </div>
@@ -211,6 +221,14 @@ margin-top:20px;
 <input type="text" id="nombre" placeholder="Nombre / Alergias">
 
 <button type="submit">Reservar mi plato</button>
+
+<!-- WHATSAPP -->
+
+<div class="whatsapp">
+<a href="https://wa.me/34614143645?text=Hola%20ETAMA,%20tengo%20una%20consulta%20sobre%20mi%20pedido" target="_blank">
+Contáctanos por WhatsApp por cualquier duda o pregunta
+</a>
+</div>
 
 <div id="mensaje"></div>
 
@@ -226,7 +244,6 @@ Reservas abiertas hasta jueves 21:00
 
 let selectedPlato = null;
 
-// bloqueo si ya reservó
 if (localStorage.getItem("etama_reserva")) {
 document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("etamaForm").innerHTML =
