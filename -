@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+
 body {
 font-family: 'Inter', sans-serif;
 background:#f4f1ec;
@@ -27,6 +28,7 @@ text-align:center;
 font-size:26px;
 letter-spacing:4px;
 margin-bottom:6px;
+font-weight:500;
 }
 
 .subtitle {
@@ -46,6 +48,7 @@ cursor:pointer;
 display:flex;
 gap:12px;
 transition:0.2s;
+align-items:flex-start;
 }
 
 .card:hover {
@@ -77,6 +80,7 @@ margin-top:5px;
 margin-left:auto;
 font-weight:500;
 color:#3a5a40;
+white-space:nowrap;
 }
 
 button {
@@ -101,7 +105,16 @@ padding:14px;
 border-radius:10px;
 border:1px solid #ddd;
 margin-top:15px;
+font-size:14px;
 }
+
+.limit {
+text-align:center;
+margin-top:20px;
+font-size:12px;
+color:#888;
+}
+
 </style>
 </head>
 
@@ -114,17 +127,19 @@ margin-top:15px;
 
 <form id="etamaForm">
 
+<!-- OPCIONES -->
+
 <div class="card" onclick="selectOption(this,'Bowl de Pollo')">
-<input type="radio" name="plato" value="Bowl de Pollo">
+<input type="radio" name="plato">
 <div>
 <div class="title">Bowl de Pollo</div>
-<div class="desc">Arroz, pollo, aguacate, vegetales frescos</div>
+<div class="desc">Arroz, pollo, aguacate, verduras frescas</div>
 </div>
 <div class="price">12,50€</div>
 </div>
 
 <div class="card" onclick="selectOption(this,'Bowl del Mar del Norte')">
-<input type="radio" name="plato" value="Bowl del Mar del Norte">
+<input type="radio" name="plato">
 <div>
 <div class="title">Bowl del Mar del Norte</div>
 <div class="desc">Salmón, mango, papaya, aguacate</div>
@@ -133,7 +148,7 @@ margin-top:15px;
 </div>
 
 <div class="card" onclick="selectOption(this,'Curry Thai')">
-<input type="radio" name="plato" value="Curry Thai">
+<input type="radio" name="plato">
 <div>
 <div class="title">Curry Thai 🌶️</div>
 <div class="desc">Pollo, curry verde, leche de coco</div>
@@ -142,30 +157,36 @@ margin-top:15px;
 </div>
 
 <div class="card" onclick="selectOption(this,'Huevos Trufados')">
-<input type="radio" name="plato" value="Huevos Trufados">
+<input type="radio" name="plato">
 <div>
 <div class="title">Huevos Trufados</div>
-<div class="desc">Huevos, trufa, pan masa madre</div>
+<div class="desc">Huevos, holandesa, trufa, pan masa madre</div>
 </div>
 <div class="price">12,00€</div>
 </div>
 
+<!-- INPUT -->
+
 <input type="text" id="nombre" placeholder="Nombre / Alergias">
 
-<button type="submit">Reservar</button>
+<button type="submit">Reservar mi plato</button>
 
 </form>
+
+<div class="limit">
+Reservas abiertas hasta jueves 21:00
+</div>
 
 </div>
 
 <script>
-let selected = null;
 
-function selectOption(el, value){
+let selectedPlato = null;
+
+function selectOption(el, value) {
 document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
 el.classList.add('selected');
-el.querySelector('input').checked = true;
-selected = value;
+selectedPlato = value;
 }
 
 document.getElementById("etamaForm").addEventListener("submit", async function(e){
@@ -173,25 +194,40 @@ e.preventDefault();
 
 const nombre = document.getElementById("nombre").value;
 
-if(!selected){
+if(!selectedPlato){
 alert("Selecciona un plato");
 return;
 }
 
+if(!nombre){
+alert("Introduce tu nombre");
+return;
+}
+
 const data = {
-plato: selected,
+plato: selectedPlato,
 nombre: nombre,
 fecha: new Date().toISOString()
 };
 
-await fetch("TU_WEB_APP_URL_AQUI", {
-method:"POST",
+try {
+await fetch("https://script.google.com/macros/s/AKfycbz7liBNAYKY3G-rfCb5v6HRwlyh9MJAK45lyP376wXBQ0iuXVE02ytB-LL54f9v__PH/exec", {
+method: "POST",
 body: JSON.stringify(data)
 });
 
 alert("Reserva enviada ✔");
-this.reset();
+document.getElementById("etamaForm").reset();
+document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+selectedPlato = null;
+
+} catch (err) {
+alert("Error al enviar. Intenta de nuevo.");
+console.log(err);
+}
+
 });
+
 </script>
 
 </body>
